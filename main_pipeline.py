@@ -8,8 +8,8 @@ from datetime import datetime
 import os
 
 # Define paths for logs and models
-log_folder_path = 'C:\\Users\\muhdf\\Documents\\WORK\\Automated_pipeline_precit_loan_risk\\pipelineLog\\'
-model_folder_path = 'C:\\Users\\muhdf\\Documents\\WORK\\Automated_pipeline_precit_loan_risk\\Pre-trained_model\\'
+log_folder_path = 'C:\\Users\\muhdf\\Documents\\WORK\\Automated_pipeline_predict_loan_risk\\pipelineLog\\'
+model_folder_path = 'C:\\Users\\muhdf\\Documents\\WORK\\Automated_pipeline_predict_loan_risk\\Pre-trained_model\\'
 
 # Ensure the log folder exists
 if not os.path.exists(log_folder_path):
@@ -29,7 +29,7 @@ try:
     logging.info("Pipeline execution started.")
 
     # Load data
-    folder_path = 'C:\\Users\\muhdf\\Documents\\WORK\\Automated_pipeline_precit_loan_risk\\Datasets\\'
+    folder_path = 'C:\\Users\\muhdf\\Documents\\WORK\\Automated_pipeline_predict_loan_risk\\Datasets\\'
     loan_data = load_data(folder_path)
     logging.info("Data loaded successfully from the latest file.")
 
