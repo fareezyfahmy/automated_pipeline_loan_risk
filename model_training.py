@@ -1,6 +1,7 @@
 from lightgbm import LGBMClassifier
 from sklearn.model_selection import RandomizedSearchCV
 import joblib
+import os
 
 def train_model(X_train, y_train):
     """Train a new LightGBM model."""
@@ -47,10 +48,17 @@ def retrain_model_with_tuning(clf, X_train, y_train):
     clf = random_search.best_estimator_
     return clf
 
-def save_model(clf, filename='lightgbm_pretrained_model.pkl'):
-    """Save the trained model to a file."""
-    joblib.dump(clf, filename)
-    print(f"Model saved to {filename}")
+def save_model(clf, folder_path, filename='lightgbm_pretrained_model.pkl'):
+    """Save the trained model to a specified folder."""
+    # Ensure the folder exists, if not create it
+    os.makedirs(folder_path, exist_ok=True)
+
+    # Join folder path and filename to create full file path
+    file_path = os.path.join(folder_path, filename)
+    
+    # Save the model
+    joblib.dump(clf, file_path)
+    print(f"Model saved to {file_path}")
 
 def load_model(filename='lightgbm_pretrained_model.pkl'):
     """Load a pre-trained model."""

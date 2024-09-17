@@ -7,16 +7,29 @@ from sklearn.model_selection import train_test_split
 from datetime import datetime
 import os
 
+# Define paths for logs and models
+log_folder_path = 'C:\\Users\\muhdf\\Documents\\WORK\\Automated_pipeline_precit_loan_risk\\pipelineLog\\'
+model_folder_path = 'C:\\Users\\muhdf\\Documents\\WORK\\Automated_pipeline_precit_loan_risk\\Pre-trained_model\\'
+
+# Ensure the log folder exists
+if not os.path.exists(log_folder_path):
+    os.makedirs(log_folder_path)
+
+# Ensure the model folder exists
+if not os.path.exists(model_folder_path):
+    os.makedirs(model_folder_path)
 
 # Set up logging
-logging.basicConfig(filename='pipeline.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+log_filename = 'pipeline.log'
+log_file_path = os.path.join(log_folder_path, log_filename)
+logging.basicConfig(filename=log_file_path, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 try:
     # Log start of the pipeline
     logging.info("Pipeline execution started.")
 
     # Load data
-    folder_path = 'C:\\Users\\muhdf\\Documents\\WORK\\MONEYLION\\predict_loan\\data\\data'
+    folder_path = 'C:\\Users\\muhdf\\Documents\\WORK\\Automated_pipeline_precit_loan_risk\\Datasets\\'
     loan_data = load_data(folder_path)
     logging.info("Data loaded successfully from the latest file.")
 
@@ -37,7 +50,8 @@ try:
 
     # Load or train the model
     model_filename = f'lightgbm_model_{datetime.now().strftime("%Y%m%d")}.pkl'
-    clf = load_model(model_filename)
+    model_file_path = os.path.join(model_folder_path, model_filename)
+    clf = load_model(model_file_path)
     if clf is None:
         clf = train_model(X_train, y_train)
         logging.info("No pre-trained model found. Training a new model.")
@@ -45,8 +59,7 @@ try:
         logging.info("Pre-trained model found and fine-tuned.")    
     
     # Load previous training data (for drift detection)
-    previous_data_path = 'C:\\Users\\muhdf\\Documents\\WORK\\MONEYLION\\predict_loan\\data\\data'
-    previous_data = load_data(previous_data_path, n=2)  # Load the second latest dataset
+    previous_data = load_data(folder_path, n=2)  # Load the second latest dataset
     previous_data = preprocess_data(previous_data)
 
     # Detect feature drift between previous and current data
@@ -66,7 +79,7 @@ try:
     logging.info("Model evaluation completed.")
 
     # Save the model with versioning
-    save_model(clf, model_filename)
+    save_model(clf, model_folder_path, model_filename)
     logging.info(f"Model saved as {model_filename}.")
 
     # Log end of the pipeline
